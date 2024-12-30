@@ -1,0 +1,2 @@
+jdk=edu.guidian.yurpc.serializer.JdkSerializer
+hessian=edu.guidian.yurpc.serializer.HessianSerializer
