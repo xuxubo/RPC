@@ -17,6 +17,7 @@ import io.vertx.core.http.HttpServerResponse;
 import java.io.IOException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.ServiceLoader;
 
 
 public class HttpServerHandler implements Handler<HttpServerRequest> {
@@ -34,7 +35,8 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest request) {
         //使用自带序列化
-        final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
+
         //记录日志
         System.out.println("Received request: " + request.method() + " " + request.uri());
 
@@ -58,8 +60,15 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
                 return;
             }
             try {
+
                 //本地注册的服务实现类
                 Class<?> implClass = LocalRegistry.get(rpcRequest.getServiceName());
+                System.out.println("需要的服务：" + rpcRequest.getServiceName());
+                System.out.println("本地注册的服务实现类：" + implClass);
+                if (implClass == null) {
+                    rpcResponse.setMessage("implClass is null");
+                    return;
+                }
                 //调用指定方法
                 Method method = implClass.getMethod(rpcRequest.getMethodName(), rpcRequest.getParameterTypes());
                 //返回的结果

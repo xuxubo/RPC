@@ -12,6 +12,7 @@ import edu.guidian.yurpc.serializer.SerializerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.ServiceLoader;
 
 /**
  * 动态代理
@@ -28,8 +29,10 @@ public class ServiceProxy implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        //指定序列化器
-        final Serializer serializer = SerializerFactory.getSerializer(RpcApplication.getRpcConfig().getSerializer());
+        //指定序列化器（静态）
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
+
+        System.out.println(serializer.getClass().getName());
 
         //构造请求
         RpcRequest rpcRequest = RpcRequest.builder()

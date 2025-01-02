@@ -33,10 +33,6 @@ public class SerializerFactory {
 //        put(SerializerKeys.HESSIAN, new HessianSerializer());
 //    }};
 //
-//    /**
-//     * 默认实例
-//     */
-//    private static final Serializer DEFAULT_SERIALIZER = KEY_SERIALIZER_MAP.get(SerializerKeys.JDK);
 //
 //    /**
 //     * 获取实例

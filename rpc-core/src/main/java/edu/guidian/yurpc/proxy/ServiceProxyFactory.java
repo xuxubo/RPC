@@ -1,7 +1,6 @@
 package edu.guidian.yurpc.proxy;
 
 import edu.guidian.yurpc.RpcApplication;
-
 import java.lang.reflect.Proxy;
 
 public class ServiceProxyFactory {

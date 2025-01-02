@@ -87,6 +87,7 @@ public class SpiLoader {
         Map<String, Class<?>> keyClassMap = new HashMap<>();
         for (String scanDir : SCAN_DIRS) {
             List<URL> resources = ResourceUtil.getResources(scanDir + loadClass.getName());
+            System.out.println(scanDir+loadClass.getName());
             for (URL resource : resources) {
                 try {
                     InputStreamReader inputStreamReader = new InputStreamReader(resource.openStream(), "UTF-8");

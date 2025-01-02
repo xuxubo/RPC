@@ -14,7 +14,6 @@ public class HessianSerializer implements Serializer {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         HessianOutput hessianOutput = new HessianOutput(byteArrayOutputStream);
         hessianOutput.writeObject(object);
-        hessianOutput.flush();
         return byteArrayOutputStream.toByteArray();
     }
 

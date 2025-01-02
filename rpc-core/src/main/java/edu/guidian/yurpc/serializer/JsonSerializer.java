@@ -1,8 +1,5 @@
 package edu.guidian.yurpc.serializer;
 
-
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.guidian.yurpc.model.RpcRequest;
 import edu.guidian.yurpc.model.RpcResponse;
@@ -76,7 +73,7 @@ public class JsonSerializer implements Serializer {
             //获取参数类型
             Class<?> parameterType = parameterTypes[i];
             //判断参数类型是否相同
-            if (parameterType.isAssignableFrom(args[i].getClass())) {
+            if (!parameterType.isAssignableFrom(args[i].getClass())) {
                 //需要转换
                 byte[] bytes = OBJECT_MAPPER.writeValueAsBytes(rpcRequest);
                 args[i] = OBJECT_MAPPER.readValue(bytes, parameterType);

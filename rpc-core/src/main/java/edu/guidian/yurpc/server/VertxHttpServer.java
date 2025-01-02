@@ -25,7 +25,7 @@ public class VertxHttpServer implements HttpServer {
         //启动HTTP服务器并监听指定端口，result为handler的处理结果
         server.listen(port, result -> {
             if (result.succeeded()) {
-                System.out.println("Server is now listening on port" + port);
+                System.out.println("Server is now listening on port:" + port);
             } else {
                 System.out.println("Failed to start server: " + result.cause());
             }

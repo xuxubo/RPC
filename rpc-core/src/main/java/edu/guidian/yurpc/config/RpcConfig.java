@@ -14,7 +14,7 @@ public class RpcConfig {
 
     private Integer serverPort = 8080;
 
-    private boolean mock = false;
+    private boolean mock = true;
 
-    private String serializer = SerializerKeys.JDK;
+    private String serializer = SerializerKeys.JSON;
 }
