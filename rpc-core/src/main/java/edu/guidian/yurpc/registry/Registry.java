@@ -23,4 +23,6 @@ public interface Registry {
     void destroy();
 
     void heartBeat();
+
+
 }
