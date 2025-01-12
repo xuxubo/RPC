@@ -3,9 +3,8 @@ package edu.guidian.example.consumer;
 import edu.guidian.example.common.model.User;
 import edu.guidian.example.common.service.UserService;
 import edu.guidian.yurpc.RpcApplication;
-import edu.guidian.yurpc.config.RpcConfig;
 import edu.guidian.yurpc.proxy.ServiceProxyFactory;
-import edu.guidian.yurpc.utils.ConfigUtils;
+
 
 public class ConsumerExample {
 

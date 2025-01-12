@@ -1,7 +1,10 @@
 package edu.guidian.yurpc;
 
+import edu.guidian.yurpc.config.RegistryConfig;
 import edu.guidian.yurpc.config.RpcConfig;
 import edu.guidian.yurpc.constant.RpcConstant;
+import edu.guidian.yurpc.registry.Registry;
+import edu.guidian.yurpc.registry.RegistryFactory;
 import edu.guidian.yurpc.utils.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,6 +21,12 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config = {}", newRpcConfig.toString());
+        //注册中心初始化
+        RegistryConfig registryConfig = newRpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
+
     }
 
     /**

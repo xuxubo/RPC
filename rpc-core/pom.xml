@@ -62,7 +62,18 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version> <!-- 请根据需要选择最新版本 -->
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/io.etcd/jetcd-core Etcd 是一个 Go 语言实现的、开源的、分布式 的键-->
+        <dependency>
+            <groupId>io.etcd</groupId>
+            <artifactId>jetcd-core</artifactId>
+            <version>0.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

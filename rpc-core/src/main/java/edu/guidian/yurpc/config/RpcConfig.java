@@ -12,9 +12,11 @@ public class RpcConfig {
 
     private String serverHost = "127.0.0.1";
 
-    private Integer serverPort = 8080;
+    private Integer serverPort = 8081;
 
-    private boolean mock = true;
+    private boolean mock = false;
 
-    private String serializer = SerializerKeys.JSON;
+    private String serializer = SerializerKeys.JDK;
+
+    private RegistryConfig registryConfig = new RegistryConfig();
 }
