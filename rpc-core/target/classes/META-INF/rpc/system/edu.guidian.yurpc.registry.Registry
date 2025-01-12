@@ -1,0 +1,1 @@
+etcd=edu.guidian.yurpc.registry.EtcdRegistry

@@ -1,0 +1,2 @@
+json=edu.guidian.yurpc.serializer.JsonSerializer
+kryo=edu.guidian.yurpc.serializer.KryoSerializer
