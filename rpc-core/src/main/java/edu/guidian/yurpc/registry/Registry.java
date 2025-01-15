@@ -24,5 +24,7 @@ public interface Registry {
 
     void heartBeat();
 
+    void watch(String serviceNodeKey);
+
 
 }

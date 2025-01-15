@@ -1,6 +1,7 @@
 package edu.guidian.yurpc.registry;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.task.Task;
 import cn.hutool.json.JSONUtil;
@@ -10,6 +11,7 @@ import edu.guidian.yurpc.model.ServiceMetaInfo;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
+import io.etcd.jetcd.watch.WatchEvent;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -27,6 +29,12 @@ public class EtcdRegistry implements Registry {
      * 注册中心服务缓存
      */
     private final RegistryServiceCache registryServiceCache = new RegistryServiceCache();
+
+    /**
+     * 正在监听的集合
+     * ConcurrentHashSet 线程安全的集合
+     */
+    private final Set<String> watchKeySet = new ConcurrentHashSet<>();
 
     /**
      * 根节点
@@ -83,8 +91,6 @@ public class EtcdRegistry implements Registry {
         }
 
 
-
-
         // 前缀搜索，结尾一定要加 '/'
         String searchPrefix = ETCD_ROOT_PATH + serviceKey ;
 
@@ -99,6 +105,9 @@ public class EtcdRegistry implements Registry {
             // 解析服务信息
             List<ServiceMetaInfo> serviceMetaInfoList = keyValues.stream()
                     .map(keyValue -> {
+                        String key = keyValue.getValue().toString(StandardCharsets.UTF_8);
+                        //监听key的变化
+                        watch(key);
                         String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
                         return JSONUtil.toBean(value, ServiceMetaInfo.class);
                     })
@@ -157,6 +166,32 @@ public class EtcdRegistry implements Registry {
 
         CronUtil.setMatchSecond(true);
         CronUtil.start();
+    }
+
+    /**
+     * 监听消费端
+     *
+     * @param serviceNodeKey
+     */
+    @Override
+    public void watch(String serviceNodeKey) {
+        Watch watchCline = client.getWatchClient();
+        boolean newWatch = watchKeySet.add(serviceNodeKey);
+        if (newWatch) {
+            watchCline.watch(ByteSequence.from(serviceNodeKey, StandardCharsets.UTF_8),watchResponse -> {
+                for (WatchEvent event : watchResponse.getEvents()) {
+                    switch (event.getEventType()) {
+                        case DELETE : registryServiceCache.clearCache();
+                            break;
+                        case PUT:
+                        default:
+                            break;
+                    }
+                }
+            });
+
+        }
+
     }
 
 }

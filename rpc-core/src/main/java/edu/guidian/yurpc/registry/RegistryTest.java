@@ -9,7 +9,6 @@ import io.etcd.jetcd.KV;
 import io.etcd.jetcd.KeyValue;
 import io.etcd.jetcd.kv.GetResponse;
 import io.etcd.jetcd.options.GetOption;
-import lombok.var;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
