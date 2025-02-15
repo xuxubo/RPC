@@ -1,6 +1,7 @@
 package edu.guidian.yurpc.registry;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.task.Task;
 import cn.hutool.json.JSONUtil;
@@ -10,6 +11,7 @@ import edu.guidian.yurpc.model.ServiceMetaInfo;
 import io.etcd.jetcd.*;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.PutOption;
+import io.etcd.jetcd.watch.WatchEvent;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -37,6 +39,12 @@ public class EtcdRegistry implements Registry {
      * 本机注册节点key集合
      */
     private final Set<String> localRegisterNodeKetSet = new HashSet<>();
+
+    /**
+     * 监听key集合
+     */
+    private final Set<String> watchingKeySet = new ConcurrentHashSet<>();
+
 
     @Override
     public void init(RegistryConfig registryConfig) {
@@ -78,16 +86,13 @@ public class EtcdRegistry implements Registry {
     public List<ServiceMetaInfo> serviceDiscovery(String serviceKey) {
         // 从缓存中获取
         List<ServiceMetaInfo> cachedServiceMetaInfoList  = registryServiceCache.readCache();
+        //命中直接返回
         if (CollUtil.isNotEmpty(cachedServiceMetaInfoList )) {
             return cachedServiceMetaInfoList ;
         }
 
-
-
-
-        // 前缀搜索，结尾一定要加 '/'
+        // 前缀搜索服务，结尾一定要加 '/'
         String searchPrefix = ETCD_ROOT_PATH + serviceKey ;
-
         try {
             // 前缀查询
             GetOption getOption = GetOption.builder().isPrefix(true).build();
@@ -99,10 +104,15 @@ public class EtcdRegistry implements Registry {
             // 解析服务信息
             List<ServiceMetaInfo> serviceMetaInfoList = keyValues.stream()
                     .map(keyValue -> {
+                        //服务的key
+                        String key = keyValue.getKey().toString(StandardCharsets.UTF_8);
+                        watch(key);
+                        //服务的value
                         String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
                         return JSONUtil.toBean(value, ServiceMetaInfo.class);
                     })
                     .collect(Collectors.toList());
+            //写入服务缓存
             registryServiceCache.writeCache(serviceMetaInfoList);
             return serviceMetaInfoList;
         } catch (Exception e) {
@@ -157,6 +167,29 @@ public class EtcdRegistry implements Registry {
 
         CronUtil.setMatchSecond(true);
         CronUtil.start();
+    }
+
+    /**
+     * 监听消费端
+     */
+    @Override
+    public void watch(String serviceNodeKey) {
+        Watch watchClient = client.getWatchClient();
+        boolean newWatch = watchingKeySet.add(serviceNodeKey);
+        if (newWatch) {
+            watchClient.watch(ByteSequence.from(serviceNodeKey, StandardCharsets.UTF_8), repoase -> {
+                for (WatchEvent event : repoase.getEvents()) {
+                    switch (event.getEventType()) {
+                        case DELETE:
+                            registryServiceCache.clearCache();
+                            break;
+                        case PUT:
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
     }
 
 }
