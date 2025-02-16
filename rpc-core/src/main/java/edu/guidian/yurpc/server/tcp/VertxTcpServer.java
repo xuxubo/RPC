@@ -17,14 +17,16 @@ public class VertxTcpServer implements HttpServer {
         NetServer server = vertx.createNetServer();
 
         //处理请求
-        server.connectHandler(socket -> {
-            socket.handler(buffer -> {
-                //处理接收到的字节数据
-                byte[] requestData = buffer.getBytes();
-                byte[] responseData = handleRequest(requestData);
-                socket.write(Buffer.buffer(responseData));
-            });
-        });
+//        server.connectHandler(socket -> {
+//            socket.handler(buffer -> {
+//                //处理接收到的字节数据
+//                byte[] requestData = buffer.getBytes();
+//                byte[] responseData = handleRequest(requestData);
+//                socket.write(Buffer.buffer(responseData));
+//            });
+//        });
+        server.connectHandler(new TcpServerHandler());
+
         server.listen(port,result->{
             if(result.succeeded()){
                 System.out.println("Server is now listening on port:" + port);
@@ -35,6 +37,7 @@ public class VertxTcpServer implements HttpServer {
     }
 
     private byte[] handleRequest(byte[] requestData) {
+
         return "hello,client!".getBytes();
     }
 

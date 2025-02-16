@@ -10,9 +10,9 @@ public class ServiceMetaInfo {
 
     private String serviceVersion = "1.0";
 
-    private String serviceHost;
+    private String serviceHost = "127.0.0.1";
 
-    private Integer servicePort;
+    private Integer servicePort = 8080;
 
     private String serviceGroup = "default";
 

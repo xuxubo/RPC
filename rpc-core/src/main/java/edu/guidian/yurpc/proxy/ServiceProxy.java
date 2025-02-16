@@ -15,6 +15,7 @@ import edu.guidian.yurpc.registry.Registry;
 import edu.guidian.yurpc.registry.RegistryFactory;
 import edu.guidian.yurpc.serializer.Serializer;
 import edu.guidian.yurpc.serializer.SerializerFactory;
+import edu.guidian.yurpc.server.tcp.VertxTcpClient;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetClient;
@@ -77,6 +78,7 @@ public class ServiceProxy implements InvocationHandler {
 //                return rpcResponse.getData();
 //            }
             //发送tcp请求
+
             Vertx vertx = Vertx.vertx();
             NetClient netClient = Vertx.vertx().createNetClient();
             CompletableFuture<RpcResponse> responseFuture  = new CompletableFuture<>();

@@ -27,6 +27,7 @@ public class RpcApplication {
         registry.init(registryConfig);
         log.info("registry init, config = {}", registryConfig);
 
+        //在JVM关闭时，自动调用registry.destroy()方法，下线当前节点
         Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
     }
 
