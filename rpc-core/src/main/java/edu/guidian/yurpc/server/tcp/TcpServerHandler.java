@@ -21,8 +21,8 @@ import java.lang.reflect.Method;
  */
 public class TcpServerHandler implements Handler<NetSocket> {
     @Override
-    public void handle(NetSocket netSocket) {
-        netSocket.handler(buffer -> {
+    public void handle(NetSocket socket) {
+        TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(buffer->{
             ProtocolMessage<RpcRequest> protocolMessage;
             try {
                 protocolMessage = (ProtocolMessage<RpcRequest>) ProtocolMessageDecoder.decode(buffer);
@@ -50,11 +50,12 @@ public class TcpServerHandler implements Handler<NetSocket> {
             ProtocolMessage<RpcResponse> responseProtocolMessage = new ProtocolMessage<>(header, rpcResponse);
             try {
                 Buffer encoder = ProtocolMessageEncoder.encode(responseProtocolMessage);
-                netSocket.write(encoder);
+                socket.write(encoder);
             } catch (IOException e) {
                 throw new RuntimeException("协议消息编码错误");
             }
 
         });
+        socket.handler(bufferHandlerWrapper);
     }
 }

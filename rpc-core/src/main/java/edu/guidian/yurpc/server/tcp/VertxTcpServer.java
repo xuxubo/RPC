@@ -41,9 +41,9 @@ public class VertxTcpServer implements HttpServer {
         return "hello,client!".getBytes();
     }
 
-    public static void main(String[] args) {
-        new VertxTcpServer().doStart(8888);
-
-    }
+//    public static void main(String[] args) {
+//        new VertxTcpServer().doStart(8888);
+//
+//    }
 
 }
