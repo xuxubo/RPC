@@ -12,7 +12,7 @@ public class RpcConfig {
 
     private String serverHost = "127.0.0.1";
 
-    private Integer serverPort = 8081;
+    private Integer serverPort = 8080;
 
     private boolean mock = false;
 

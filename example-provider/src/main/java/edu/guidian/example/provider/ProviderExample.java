@@ -10,6 +10,7 @@ import edu.guidian.yurpc.registry.Registry;
 import edu.guidian.yurpc.registry.RegistryFactory;
 import edu.guidian.yurpc.server.HttpServer;
 import edu.guidian.yurpc.server.VertxHttpServer;
+import edu.guidian.yurpc.server.tcp.VertxTcpServer;
 
 public class ProviderExample {
 
@@ -34,8 +35,11 @@ public class ProviderExample {
             throw new RuntimeException(e);
         }
         //启动Web服务
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+//        HttpServer httpServer = new VertxHttpServer();
+//        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+        //启动tcp服务器
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(8080);
 
     }
 }
