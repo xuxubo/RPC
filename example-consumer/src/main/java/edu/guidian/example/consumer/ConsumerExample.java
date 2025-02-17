@@ -3,6 +3,7 @@ package edu.guidian.example.consumer;
 import edu.guidian.example.common.model.User;
 import edu.guidian.example.common.service.UserService;
 import edu.guidian.yurpc.RpcApplication;
+import edu.guidian.yurpc.bootstrap.ConsumerBootstrap;
 import edu.guidian.yurpc.proxy.ServiceProxyFactory;
 
 
@@ -15,7 +16,8 @@ public class ConsumerExample {
         //RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
 
 //        System.out.println(rpc);
-        RpcApplication.init();
+        //RpcApplication.init();
+        ConsumerBootstrap.init();
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
         user.setName("test");

@@ -6,6 +6,8 @@ import edu.guidian.yurpc.config.RpcConfig;
 import edu.guidian.yurpc.constant.RpcConstant;
 import edu.guidian.yurpc.fault.retry.RetryStrategy;
 import edu.guidian.yurpc.fault.retry.RetryStrategyFactory;
+import edu.guidian.yurpc.fault.tolerant.TolerantStrategy;
+import edu.guidian.yurpc.fault.tolerant.TolerantStrategyFactory;
 import edu.guidian.yurpc.loadbalancer.LoadBalancer;
 import edu.guidian.yurpc.loadbalancer.LoadBalancerFactory;
 import edu.guidian.yurpc.model.RpcRequest;
@@ -91,10 +93,17 @@ public class ServiceProxy implements InvocationHandler {
             //发送tcp请求
 
             //RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest,selectedServiceMetaInfo);
-            //rpc请求
-            //使用重试机制
-            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStategy());
-            RpcResponse rpcResponse = retryStrategy.doRetry(() -> VertxTcpClient.doRequest(rpcRequest,selectedServiceMetaInfo));
+            RpcResponse rpcResponse = null;
+
+            try {
+                //rpc请求
+                //使用重试机制
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStategy());
+                rpcResponse = retryStrategy.doRetry(() -> VertxTcpClient.doRequest(rpcRequest,selectedServiceMetaInfo));
+            } catch (Exception e) {
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
+            }
             return rpcResponse.getData();
 //            Vertx vertx = Vertx.vertx();
 //            NetClient netClient = Vertx.vertx().createNetClient();

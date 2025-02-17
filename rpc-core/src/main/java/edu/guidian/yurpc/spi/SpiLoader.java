@@ -69,6 +69,7 @@ public class SpiLoader {
         if (!keyClassMap.containsKey(key)) {
             throw new RuntimeException(String.format("SpiLoader 的 %s 不存在 key=%s 的类型", tClassName, key));
         }
+        //反射
         Class<?> implClass = keyClassMap.get(key);
         String implClassName = implClass.getName();
         if (!instanceCache.containsKey(implClassName)) {

@@ -1,0 +1,2 @@
+failFast=edu.guidian.yurpc.fault.tolerant.FailFastTolerantStrategy
+failSafe=edu.guidian.yurpc.fault.tolerant.FailSafeTolerantStrategy
