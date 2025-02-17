@@ -1,0 +1,2 @@
+no=edu.guidian.yurpc.fault.retry.NoRetryStrategy
+fixedInterval=edu.guidian.yurpc.fault.retry.FixedIntervalRetryStrategy

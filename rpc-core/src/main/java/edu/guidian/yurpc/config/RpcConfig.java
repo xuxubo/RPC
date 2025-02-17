@@ -1,5 +1,8 @@
 package edu.guidian.yurpc.config;
 
+import edu.guidian.yurpc.fault.retry.RetryStrategy;
+import edu.guidian.yurpc.fault.retry.RetryStrategyKeys;
+import edu.guidian.yurpc.loadbalancer.LoadBalancerKeys;
 import edu.guidian.yurpc.serializer.SerializerKeys;
 import lombok.Data;
 
@@ -17,6 +20,10 @@ public class RpcConfig {
     private boolean mock = false;
 
     private String serializer = SerializerKeys.JDK;
+
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
+    private String retryStategy = RetryStrategyKeys.No;
 
     private RegistryConfig registryConfig = new RegistryConfig();
 }

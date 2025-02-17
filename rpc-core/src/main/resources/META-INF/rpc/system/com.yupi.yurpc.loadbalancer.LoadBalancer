@@ -1,0 +1,3 @@
+roundRobin=edu.guidian.yurpc.loadbalancer.RoundRobinLoadBalancer
+random=edu.guidian.yurpc.loadbalancer.RandomLoadBalancer
+consistentHash=edu.guidian.yurpc.loadbalancer.ConsistentHashLoadBalancer
